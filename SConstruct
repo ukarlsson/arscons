@@ -184,6 +184,16 @@ sketchExt = '.ino' if path.exists(TARGET + '.ino') else '.pde'
 cFlags = ['-ffunction-sections', '-fdata-sections', '-fno-exceptions',
           '-funsigned-char', '-funsigned-bitfields', '-fpack-struct',
           '-fshort-enums', '-Os', '-Wall', '-mmcu=%s' % MCU]
+if ARDUINO_BOARD == "leonardo":
+    for bf in board_files:
+        for line in open(bf):
+            if line.startswith(ARDUINO_BOARD+".build.vid"):
+                vid = line.split("=")[1].strip(" \n\r")
+                cFlags += ["-DUSB_VID="+vid]
+            if line.startswith(ARDUINO_BOARD+".build.pid"):
+                vid = line.split("=")[1].strip(" \n\r")
+                cFlags += ["-DUSB_PID="+vid]
+
 envArduino = Environment(CC = AVR_BIN_PREFIX + 'gcc',
                          CXX = AVR_BIN_PREFIX + 'g++',
                          AS = AVR_BIN_PREFIX + 'gcc',
