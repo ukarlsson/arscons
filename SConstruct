@@ -196,6 +196,6 @@ bossac_cmd = '%s --port=%s -U false -e -w -v -b $SOURCES -R' % (
 
 upload = env.Alias('upload', out_bin, [touch_port_1200, touch_port_9600, bossac_cmd])
 
-# env.AlwaysBuild(upload)
+env.AlwaysBuild(upload)
 
 env.Clean('all', 'build')
