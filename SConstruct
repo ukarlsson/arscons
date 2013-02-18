@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import fnmatch
+import re
 from glob import glob
 import os
 
@@ -149,10 +149,12 @@ env = Environment(CC = arduino_gcc_bin("gcc"),
 )
 
 def _rebase_sources(rebase, base, dirname):
+    prog = re.compile('.+\.(c|cpp|S)$')
     path = os.path.join(base, dirname)
     for _, dirnames, filenames in os.walk(path, topdown=True):
-        for filename in fnmatch.filter(filenames, '*.c') + fnmatch.filter(filenames, '*.cpp'):
-            yield os.path.join(rebase, dirname, filename)
+        for filename in filenames:
+            if prog.match(filename) is not None:
+                yield os.path.join(rebase, dirname, filename)
         for subdirname in dirnames:
             for filename in _rebase_sources(rebase, base, os.path.join(dirname, subdirname)):
                 yield filename
